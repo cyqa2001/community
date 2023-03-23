@@ -1,5 +1,6 @@
 package cn.edu.scau.community.controller;
 
+import cn.edu.scau.community.annotation.LoginRequired;
 import cn.edu.scau.community.entity.User;
 import cn.edu.scau.community.service.UserService;
 import cn.edu.scau.community.util.CommunityUtil;
@@ -43,11 +44,13 @@ public class UserController {
     @Autowired
     private HostHolder hostHolder;
 
+    @LoginRequired
     @RequestMapping(path = "/setting", method = RequestMethod.GET)
     public String getSettingPage() {
         return "site/setting";
     }
 
+    @LoginRequired
     @RequestMapping(path = "/upload", method = RequestMethod.POST)
     public String uploadHeader(MultipartFile headerImage, Model model) {
         if (headerImage == null) {
@@ -105,6 +108,7 @@ public class UserController {
         }
     }
 
+    @LoginRequired
     @RequestMapping(path = "/changePassword", method = RequestMethod.POST)
     public String changePassword(String oldPassword, String newPassword, String confirmPassword, Model model) {
 
