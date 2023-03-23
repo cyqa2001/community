@@ -103,7 +103,31 @@ public class UserController {
         } catch (IOException e) {
             logger.error("读取头像失败：" + e.getMessage());
         }
+    }
 
+    @RequestMapping(path = "/changePassword", method = RequestMethod.POST)
+    public String changePassword(String oldPassword, String newPassword, String confirmPassword, Model model) {
+
+        User user = hostHolder.getUser();
+        oldPassword = CommunityUtil.md5(oldPassword + user.getSalt());
+        if (!user.getPassword().equals(oldPassword)) {
+            model.addAttribute("oldMsg", "原密码错误!");
+            return "/site/setting";
+        }
+
+        if (!newPassword.equals(confirmPassword)) {
+            model.addAttribute("confirmMsg", "两次输入的密码不一致!");
+            return "/site/setting";
+        }
+
+        newPassword = CommunityUtil.md5(newPassword + user.getSalt());
+        if (oldPassword.equals(newPassword)) {
+            model.addAttribute("newMsg", "新密码不得与原密码一致!");
+            return "/site/setting";
+        }
+
+        userService.updatePassword(user, newPassword);
+        return "redirect:/index";
     }
 
 
