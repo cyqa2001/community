@@ -7,6 +7,7 @@ public class DiscussPost {
     private int id;
     private int userId;
     private String title;
+    private String Content;
     private int type;
     private int status;
     private Date createTime;
@@ -35,6 +36,14 @@ public class DiscussPost {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getContent() {
+        return Content;
+    }
+
+    public void setContent(String content) {
+        Content = content;
     }
 
     public int getType() {
@@ -83,6 +92,7 @@ public class DiscussPost {
                 "id=" + id +
                 ", userId=" + userId +
                 ", title='" + title + '\'' +
+                ", Content='" + Content + '\'' +
                 ", type=" + type +
                 ", status=" + status +
                 ", createTime=" + createTime +
