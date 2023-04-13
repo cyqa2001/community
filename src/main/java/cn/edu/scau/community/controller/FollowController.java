@@ -1,7 +1,9 @@
 package cn.edu.scau.community.controller;
 
+import cn.edu.scau.community.entity.Event;
 import cn.edu.scau.community.entity.Page;
 import cn.edu.scau.community.entity.User;
+import cn.edu.scau.community.event.EventProducer;
 import cn.edu.scau.community.service.FollowService;
 import cn.edu.scau.community.service.UserService;
 import cn.edu.scau.community.util.CommunityConstant;
@@ -30,12 +32,24 @@ public class FollowController implements CommunityConstant{
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private EventProducer eventProducer;
+
     @RequestMapping(path = "/follow", method = RequestMethod.POST)
     @ResponseBody
     public String follow(int entityType, int entityId) {
         User user = hostHolder.getUser();
 
         followService.follow(user.getId(), entityType, entityId);
+
+        // 触发关注事件
+        Event event = new Event()
+                .setTopic(TOPIC_FOLLOW)
+                .setUserId(hostHolder.getUser().getId())
+                .setEntityType(entityType)
+                .setEntityId(entityId)
+                .setEntityUserId(entityId);
+        eventProducer.fireEvent(event);
 
         return CommunityUtil.getJSONString(0, "已关注!");
     }
